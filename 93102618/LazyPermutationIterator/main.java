@@ -10,10 +10,11 @@ public class main {
 			System.out.printf("Permutations of array of size %d (expected %d)",
 					i, lazy.factorial(i));
 			while (lazy.hasNext()) {
+				lazy.next();
 				count += 1;
 				System.out.println();
 				System.out.printf("%d: ", count);
-				System.out.print(Arrays.toString( lazy.next() ));
+				System.out.print(lazy);
 			}
 			System.out.println("\n");
 		}

@@ -20,7 +20,6 @@ import java.util.Iterator;
  * <i>remaining</i> to give the user an idea of how many permutations remained
  * in the LazyPermutationIterator, and to capture the results of <i>factorial<i>,
  * which, in turn, utilizes the BigDecimal class.<p>
- *
  * 
  * 
  * @author  Christian Gibson
@@ -61,17 +60,25 @@ public class LazyPermutationIterator <T extends Object>
     private boolean finished = false;
     
     /**
-     * 
+     * Integer that stores the length of our source array.
      */
     private int length;
     
     /**
-     * 
+     * BigInteger that records how many permutations remain to iterate over
+     * for our source array.
      */
     private BigInteger remaining;
     
     /**
-     * 
+     * A series of BigDecimal constants:
+     *   _00 : Numeric zero.
+     *   _01 : Numeric one.
+     *   _02 : Numeric two.
+     *   _10 : Numeric ten.
+     *   _12 : Numeric twelve.
+     *   _PI : An approximation of PI, accurate to ACCURACY - 1 digits.
+     *   _EN : An approximation of E, accurate to ACCURACY - 1 digits.
      */
     private final BigDecimal _00 = new BigDecimal("0"),
                              _01 = new BigDecimal("1"),
@@ -192,7 +199,10 @@ public class LazyPermutationIterator <T extends Object>
     }
     
     /**
-     * @return
+     * Generates a reordered version of our source array that corresponds
+     * with the permutation the iterator has generated.
+     * 
+     * @return A reordering of the source array, contained in a generic array.
      */
     private T[] mapPermutation() {
         T[] mappedPermutation = (T[]) new Object[this.length];
@@ -203,8 +213,11 @@ public class LazyPermutationIterator <T extends Object>
     }
     
     /**
-     * @param loc
-     * @return
+     * Determines if a given value in our permutation is mobile according to
+     * the definition utilized in Steinhaus-Johnson-Trotter's algorithm.
+     * 
+     * @param loc The location of the value inside permutationValue.
+     * @return A boolean, indicating if the value is mobile.
      */
     private boolean isMobile(int loc) {
         int direction = this.getDirection(loc);
@@ -222,9 +235,12 @@ public class LazyPermutationIterator <T extends Object>
     }
     
     /**
-     * @param a
-     * @param move
-     * @param array
+     * Moves a value in an array by an integer amount and swaps it with the
+     * value found in that spot.
+     * 
+     * @param i The location of the value to move.
+     * @param move The amount to move the value by.
+     * @param array The array to move the value within.
      */
     private void intMove(int i, int move, int[] array) {
         int temp = array[i];
@@ -233,7 +249,9 @@ public class LazyPermutationIterator <T extends Object>
     }
     
     /**
-     * @param a
+     * Changes the direction of a value found in permutationValue.
+     * 
+     * @param i The location of the value that we are changing the direction of.
      */
     private void swapDirections(int i) {
         this.permutationValue[i] *= -1;
@@ -241,32 +259,52 @@ public class LazyPermutationIterator <T extends Object>
     
     
     /**
-     * @param i
-     * @return
+     * Returns the weight of a value found in permutationValue.
+     * 
+     * @param i The location of the value in permutationValue.
+     * @return The weight of that value.
      */
     public int getWeight(int i) {
         return this.permutationValue[i] * sign(this.permutationValue[i]);
     }
     
     /**
-     * @param i
-     * @return
+     * Returns a character representation of a value found in permutationValue.
+     * Uses '>' for DIRECTION_RIGHT and '<' for DIRECTION_LEFT.
+     * 
+     * @param i The location of the value in permutationValue.
+     * @return The direction of the value, either '<' or '>'.
+     */
+    public char getDirectionChar(int i) {
+    	return (this.getDirection(i) > 0) ? '>' : '<';
+    }
+    
+    /**
+     * Returns the direction of a value found in permutationValue.
+     * 
+     * @param i The location of the value in permutationValue.
+     * @return The direction of the value, either DIRECTION_LEFT or
+     * 		DIRECTION_RIGHT.
      */
     public int getDirection(int i) {
         return sign(this.permutationValue[i]);
     }
     
     /**
-     * @param n
-     * @return
+     * Returns the sign of an integer.
+     * 
+     * @param n The integer.
+     * @return The sign of n, either -1 or 1.
      */
     public int sign(int n) {
         return (n < 0) ? -1 : 1;
     }
     
     /**
-     * @param i
-     * @return
+     * Calculates the ith factorial using Stirling's approximation.
+     * 
+     * @param i The factorial we wish to estimate.
+     * @return A BigInteger representation of the ith factorial.
      */
     public BigInteger factorial(int i) {
     	i += 1;
@@ -295,9 +333,12 @@ public class LazyPermutationIterator <T extends Object>
     }
     
     /**
-     * @param n
-     * @param scale
-     * @return
+     * Provides the approximate square root of a BigDecimal value.
+     * 
+     * @param n The BigDecimal we wish to take the square root of.
+     * @param scale The effective accuracy we want to use in calculating the
+     * 		square root.
+     * @return The approximate square root of n.
      */
     public BigDecimal sqrt(BigDecimal n, final int scale) {
         BigDecimal aprx = _00;
@@ -315,14 +356,37 @@ public class LazyPermutationIterator <T extends Object>
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return "";
+    	String s = "[";
+    	for (int i = 0 ; i < this.length ; i++) {
+    		s += String.format("%d %s, ", this.getWeight(i),
+    				                        this.getDirectionChar(i));
+    	}
+    	s = s.substring(0, s.length() - 2) + ']';
+        return s;
     }
     
     /**
-     * @param width
-     * @return
+     * A more rigorous toString method, which allows the user to specify the
+     * maximum width of any line generated by this method.
+     * 
+     * @param width The maximum number of characters before the string will be
+     * 		split by a newline.
+     * @return A string representation of permutationValue;
      */
     public String toString(int width) {
-        return "";
+    	String s = "[";
+    	int count = 0;
+    	for (int i = 0 ; i < this.length ; i++) {
+    		String t = String.format("%d %s, ", this.getWeight(i),
+    				                              this.getDirectionChar(i));
+    		count += t.length();
+    		if (count > width) {
+    			s = s.substring(0, s.length() - 1) + '\n';
+    			count = t.length();
+    		}
+    		s += ' ' + t;
+    	}
+    	s = s.substring(0, s.length() - 2) + ']';
+        return s;
     }
 }
