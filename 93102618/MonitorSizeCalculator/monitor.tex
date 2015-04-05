@@ -1,0 +1,322 @@
+\documentclass[12pt,letterpaper]{amsart}
+%\usepackage[utf8x]{inputenc}
+%\usepackage{ucs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{fancyvrb}
+\usepackage{float}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\usepackage{amssymb}
+  \newtheorem{theorem}{Theorem}[section]
+    \newtheorem{lemma}[theorem]{Lemma}
+    \newtheorem{proposition}[theorem]{Proposition}
+    \newtheorem{corollary}[theorem]{Corollary}
+    \newtheorem{definition}[theorem]{Definition} 
+    \newtheorem{claim}[theorem]{Claim}
+    \newtheorem{example}[theorem]{Example} 
+    \newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Mod}{\operatorname{mod}}
+
+%%--! Custom column vector solution, courtesy of TH. on TeX StackExchange: http://tex.stackexchange.com/questions/2705/typesetting-column-vector/#2712
+\newcount\colveccount
+\newcommand*\colvec[1]{
+  \global\colveccount#1
+  \begin{bmatrix}
+  \colvecnext
+}
+
+\def\colvecnext#1{
+  #1
+  \global\advance\colveccount-1
+  \ifnum\colveccount>0
+    \\
+    \expandafter\colvecnext
+  \else
+    \end{bmatrix}
+  \fi
+}
+%%--! End of TH.'s custom column vector solution.
+
+%%--! Custom Python listings configuration, courtesy of redmode on TeX StackExchange: http://tex.stackexchange.com/questions/83882/how-to-highlight-python-syntax-in-latex-listings-lstinputlistings-command/#83883
+\usepackage{listings}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+% Python style for highlighting
+\newcommand\pythonstyle{
+  \lstset{
+    language=Python,
+    basicstyle=\ttm,
+    % Add keywords here
+    otherkeywords={self, None},
+    keywordstyle=\ttb\color{deepblue},
+    % Custom highlighting
+    emph={best_match,
+          match_monitor,
+          calculate_ppi,
+          calculate_side_length,
+          simplify_fraction,
+          standard_resolutions,
+          _gcd},
+    % Custom highlighting style
+    emphstyle=\ttb\color{deepred},
+    stringstyle=\color{deepgreen},
+    % Any extra options here
+    frame=tb,
+    showstringspaces=false
+  }
+}
+
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+  \pythonstyle
+  \lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]
+{
+  {
+    \pythonstyle
+    \lstinputlisting[#1]{#2}
+  }
+}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+%%--! End of redmode's custom Python listings configuration.
+
+\begin{document}
+  \begin{center}
+    \textbf{\large Determination of Optimal Matching Monitor Dimensions}
+
+    \smallskip
+
+    \begin{tikzpicture}
+      \draw (00.0, 00.0) -- (08.0, 00.0)
+            node[midway, anchor=north]
+            {$max(r_{11}, r_{12})/p_1$};
+      \draw (08.0, 00.0) -- (08.0, 04.5);
+      \draw (08.0, 04.5) -- (00.0, 04.5);
+      \draw (00.0, 04.5) -- (00.0, 00.0)
+            node[midway, anchor=south, rotate=90]
+            {$min(r_{11}, r_{12})/p_1$};
+      \draw [thick, <->]
+            (00.1, 00.1) -- (07.9, 04.4)
+            node[midway, fill=white]
+            {$d_1$};
+      \draw (08.5, 00.0) -- (13.0, 00.0)
+            node[midway, anchor=north]
+            {$min(r_{21}, r_{22})/p_2$};
+      \draw (13.0, 00.0) -- (13.0, 08.0)
+            node[midway, anchor=north, rotate=90]
+            {$max(r_{21}, r_{22})/p_2$};
+      \draw (13.0, 08.0) -- (08.5, 08.0);
+      \draw (08.5, 08.0) -- (08.5, 00.0);
+      \draw [thick, <->]
+            (08.6, 00.1) -- (12.9, 07.9)
+            node[midway, fill=white]
+            {$d_2$};
+    \end{tikzpicture}
+  \end{center}
+  
+  \noindent We note that $p_i = \sqrt{r_{i1}^2 + r_{i2}^2}/d_i$, and that $r_{ij}/a_{ij} = k_i$ where:
+  
+  $d_i=$ length of the major diagonal of monitor $i$ in inches.
+  
+  $r_{ij}=$ defining resolutions of monitor $i$ (e.g. 1920 by 1080, $r_{i1}=1920$, $r_{i2}=1080$).
+  
+  $p_i=$ pixels per inch of monitor $i$.
+  
+  $a_{ij}=$ aspect ratio of a monitor $i$ (e.g. 16 by 9, $a_{i1}=16$, $a_{i2}=9$).
+  
+  $k_i=$ a constant used to relate resolution to aspect ratio.\\
+  
+  \noindent As a result, the ideal match for a given monitor can be found by specifying either the resolution (1) or diagonal measure (2) of a secondary monitor, as shown:
+  \begin{align}
+    p_1 &= p_2 \nonumber \\
+    \frac{\sqrt{r_{11}^2 + r_{12}^2}}{d_1} &= \frac{\sqrt{r_{21}^2 + r_{22}^2}}{d_2} \nonumber \\
+    \frac{d_1\cdot\sqrt{r_{21}^2 + r_{22}^2}}{\sqrt{r_{11}^2 + r_{12}^2}} &= d_2\\
+    d_1\cdot\sqrt{r_{21}^2 + r_{22}^2} &= d_2\cdot\sqrt{r_{11}^2 + r_{12}^2} \nonumber \\
+    \sqrt{r_{21}^2 + r_{22}^2} &= \frac{d_2\cdot\sqrt{r_{11}^2 + r_{12}^2}}{d_1} \nonumber \\
+    r_{21}^2 + r_{22}^2 &= \frac{d_2^2\cdot(r_{11}^2 + r_{12}^2)}{d_1^2}
+  \end{align}
+  
+  \break
+  
+  \noindent When provided with the aspect ratio of the secondary monitor, (2) can be utilized to provide the exact resolution of the secondary monitor, instead of the squared sum of its resolution.
+  \begin{align}
+  \colvec{2}{r_{21}}{r_{22}} &= k_i\cdot\colvec{2}{a_{21}}{a_{22}} \nonumber \\
+  \colvec{2}{r_{21}}{r_{22}} &= \sqrt{k_i^2}\cdot\colvec{2}{a_{21}}{a_{22}} \nonumber \\
+  \colvec{2}{r_{21}}{r_{22}} &= \sqrt{k_i^2\cdot 1}\cdot\colvec{2}{a_{21}}{a_{22}} \nonumber \\
+  \colvec{2}{r_{21}}{r_{22}} &= \sqrt{k_i^2\cdot\frac{a_{21}^2 + a_{22}^2}{a_{21}^2 + a_{22}^2}}\cdot\colvec{2}{a_{21}}{a_{22}} \nonumber \\
+  \colvec{2}{r_{21}}{r_{22}} &= \sqrt{\frac{k_i^2 \cdot (a_{21}^2 + a_{22}^2)}{a_{21}^2+a_{22}^2}}\cdot\colvec{2}{a_{21}}{a_{22}} \nonumber \\
+  \colvec{2}{r_{21}}{r_{22}} &= \sqrt{\frac{k_i^2 \cdot a_{21}^2 + k_i^2 \cdot a_{22}^2}{a_{21}^2+a_{22}^2}}\cdot\colvec{2}{a_{21}}{a_{22}} \nonumber \\
+  \colvec{2}{r_{21}}{r_{22}} &= \sqrt{\frac{(k_i\cdot a_{21})^2 + (k_i\cdot a_{22})^2}{a_{21}^2+a_{22}^2}}\cdot\colvec{2}{a_{21}}{a_{22}} \nonumber \\
+  \colvec{2}{r_{21}}{r_{22}} &= \sqrt{\frac{r_{21}^2 + r_{22}^2}{a_{21}^2+a_{22}^2}}\cdot\colvec{2}{a_{21}}{a_{22}} \nonumber \\
+  \colvec{2}{r_{21}}{r_{22}} &= \sqrt{r_{21}^2 + r_{22}^2\cdot\frac{1}{a_{21}^2+a_{22}^2}}\cdot\colvec{2}{a_{21}}{a_{22}} \nonumber \\ 
+  \colvec{2}{r_{21}}{r_{22}} &= \sqrt{\frac{d_2^2\cdot(r_{11}^2 + r_{12}^2)}{d_1^2}\cdot\frac{1}{a_{21}^2+a_{22}^2}}\cdot\colvec{2}{a_{21}}{a_{22}}
+  \end{align}
+  
+  \noindent As an example, the following table shows results for an ASUS VN248H-P ($23.8", 1920$x$1080$).\\
+  
+  \noindent \begin{tabular}{| c | c | c | c |} \hline
+    \textbf{Resolution}
+    & \textbf{Aspect Ratio}
+    & \textbf{Length of Main Diagonal}
+    & \textbf{Pixels per Inch Disparity} \\
+    \hline
+    1920x1080
+    & 16:9
+    & 24"
+    & 0.7713260399447819 \\
+    2048x1152
+    & 16:9
+    & 25"
+    & 1.4315811301375163 \\
+    2176x1224
+    & 16:9
+    & 27"
+    & 0.0914164195490201 \\
+    2304x1296
+    & 16:9
+    & 28"
+    & 1.8511824958674765 \\
+    2432x1368
+    & 16:9
+    & 30"
+    & 0.4525112767676092 \\
+    2560x1440
+    & 16:9
+    & 31"
+    & 2.1895706940368030 \\
+    2560x1440
+    & 16:9
+    & 31.5"
+    & 0.6856231466175870 \\
+    2560x1440
+    & 16:9
+    & 32"
+    & 0.7713260399447819 \\
+    3840x2160
+    & 16:9
+    & 47.5"
+    & 0.1948613153544727 \\
+    \hline
+    2432x1520
+    & 16:10
+    & 31"
+    & 0.0452453048187920 \\
+    1880x1504
+    & 5:4
+    & 26"
+    & 0.0399026402703840 \\
+    2240x1792
+    & 5:4
+    & 31"
+    & 0.0236519427314335 \\
+    1888x1416
+    & 4:3
+    & 25.5"
+    & 0.0101051855307475 \\
+    \hline
+  \end{tabular}
+  
+  \break
+  
+  \begin{python}
+def best_match(odiag, ores, mdiag, masp=None, verbose=False):
+    mdiag, mres, masp = match_monitor(odiag, ores, mdiag, masp=masp)
+    oppi = calculate_ppi(odiag, ores)
+    odim = calculate_side_length(odiag, ores)
+    diff = float('inf')
+    bmon = None
+    for _mres in standard_resolutions(masp):
+        _mppi = calculate_ppi(mdiag, _mres)
+        if diff > abs(oppi - _mppi):
+            diff = abs(oppi - _mppi)
+            bmon = (mdiag, _mres, masp, diff, (diff*odim[0], diff*odim[1]))
+            if verbose:
+                print bmon
+        else:
+            return bmon
+
+def match_monitor(odiag, ores, mdiag=None, mres=None, masp=None):
+    if not any([mdiag, mres]):
+        return None
+    if not ((mdiag and isinstance(mdiag, (int, float)))
+             or (mres and len(mres) == 2)
+             or isinstance(odiag, (int, float))
+             or len(ores) == 2):
+        return None
+    oppi = calculate_ppi(odiag, ores)
+    if mdiag:
+        if masp and len(masp) == 2:
+            oasp = masp
+        else:
+            oasp = simplify_fraction(ores[0], ores[1])
+        mres = float(mdiag**2*(ores[0]**2 + ores[1]**2)) / odiag**2
+        mres = (mres*(1.0 / (oasp[0]**2 + oasp[1]**2)))**0.5
+        mres = (mres*oasp[0], mres*oasp[1])
+    else:
+        mdiag = float(odiag*(mres[0]**2 + mres[1]**2)**0.5)
+        mdiag = mdiag / (ores[0]**2 + ores[1]**2)**0.5
+        oasp = simplify_fraction(mres[0], mres[1])
+    return (mdiag, mres, oasp)
+
+def calculate_ppi(diag, res):
+    if (isinstance(diag, (int, float))
+        and isinstance(res, (list, tuple))
+        and len(res) > 1):
+        return (res[0]**2 + res[1]**2)**(0.5) / float(diag)
+    else:
+        return None
+
+def calculate_side_length(diag, asp):
+    if (isinstance(diag, (int, float))
+        and isinstance(asp, (list, tuple))
+        and len(asp) > 1):
+        asp = simplify_fraction(asp[0], asp[1])
+        red = float(diag) / (asp[0]**2 + asp[1]**2)**0.5
+        return (asp[0]*red, asp[1]*red)
+    else:
+        return None
+
+def standard_resolutions(asp, limit=float('inf')):
+    if not (isinstance(asp, (list, tuple))
+            and len(asp) > 1):
+        yield None
+    x, y = asp[0]*8, asp[1]*8
+    _x, _y = x, y
+    while limit:
+        yield (_x, _y)
+        _x, _y = (_x + x, _y + y)
+        limit -= 1
+
+def simplify_fraction(n, d):
+    if d == 0:
+        return None
+    c = _gcd(n, d)
+    return (n / c, d / c)
+
+def _gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+  \end{python}
+\end{document}
