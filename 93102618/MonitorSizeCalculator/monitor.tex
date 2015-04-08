@@ -58,10 +58,10 @@
 \newcommand\pythonstyle{
   \lstset{
     language=Python,
-    basicstyle=\ttm,
+    basicstyle=\ttm\small,
     % Add keywords here
     otherkeywords={self, None},
-    keywordstyle=\ttb\color{deepblue},
+    keywordstyle=\ttb\small\color{deepblue},
     % Custom highlighting
     emph={best_match,
           match_monitor,
@@ -71,7 +71,7 @@
           standard_resolutions,
           _gcd},
     % Custom highlighting style
-    emphstyle=\ttb\color{deepred},
+    emphstyle=\ttb\small\color{deepred},
     stringstyle=\color{deepgreen},
     % Any extra options here
     frame=tb,
@@ -286,6 +286,8 @@ def calculate_ppi(diag, res):
         return (res[0]**2 + res[1]**2)**(0.5) / float(diag)
     else:
         return None
+
+
 
 def calculate_side_length(diag, asp):
     if (isinstance(diag, (int, float))
