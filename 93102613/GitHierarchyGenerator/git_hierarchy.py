@@ -18,7 +18,7 @@ def print_visualization(dirname, separators=(u'└─>', u'│  ', u'├─>', u
 
 def stringify_visualization(dirname, separators=(u'└─>', u'│  ', u'├─>', u'   '),
                                      base=[u'    ']):
-    return '\n'.join(list(generate_visualization(dirname, separators, base)))
+    return u'\n'.join(list(generate_visualization(dirname, separators, base)))
 
 def generate_visualization(dirname, separators=(u'└─>', u'│  ', u'├─>', u'   '),
                                     base=[u'    ']):
@@ -30,7 +30,7 @@ def generate_visualization(dirname, separators=(u'└─>', u'│  ', u'├─>'
     base.append(separators[3])
 
     for h in sorted(hierarchy.keys()):
-        yield (''.join(base[:-1]) + ' ' + h.strip('/'))
+        yield (u''.join(base[:-1]) + u' ' + h.strip(u'/'))
         for part in _generate_visualization(hierarchy[h], files, separators, base):
             yield part
 
@@ -39,20 +39,20 @@ def _generate_visualization(hierarchy, files, separators, base, parent_file_coun
     item_count = len(item_list) - 1
     for i in range(item_count + 1):
         path, contains = item_list[i]
-        if path.endswith('/') and '/' in path.rstrip('/'):
-            _path = path.rstrip('/').split('/')[-1]
+        if path.endswith(u'/') and u'/' in path.rstrip(u'/'):
+            _path = path.rstrip(u'/').split(u'/')[-1]
         else:
-            _path = path.rstrip('/')
+            _path = path.rstrip(u'/')
 
         file_list = sorted(files[path])
         file_count = len(file_list) - 1
 
         base_addition = []
         if i < item_count or parent_file_count > 0:
-            yield (''.join(base) + separators[2] + ' ' + _path)
+            yield (u''.join(base) + separators[2] + u' ' + _path)
             base_addition = [separators[1], separators[3]]
         else:
-            yield (''.join(base) + separators[0] + ' ' + _path)
+            yield (u''.join(base) + separators[0] + u' ' + _path)
             base_addition = [separators[3], separators[3]]
 
         _base = base + base_addition
@@ -63,18 +63,18 @@ def _generate_visualization(hierarchy, files, separators, base, parent_file_coun
 
         for j in range(file_count + 1):
             if j < file_count:
-                yield (''.join(_base) + separators[2] + ' ' + file_list[j])
+                yield (u''.join(_base) + separators[2] + u' ' + file_list[j])
             else:
-                yield (''.join(_base) + separators[0] + ' ' + file_list[j])
+                yield (u''.join(_base) + separators[0] + u' ' + file_list[j])
 
-def generate_hierarchy(dirname='.'):
-    if dirname.endswith('/'):
+def generate_hierarchy(dirname=u'.'):
+    if dirname.endswith(u'/'):
         pass
     else:
-        dirname += '/'
+        dirname += u'/'
 
-    if '.gitignore' in os.listdir(dirname):
-        ignored_patterns = interpret_gitignore(dirname + '.gitignore')
+    if u'.gitignore' in os.listdir(dirname):
+        ignored_patterns = interpret_gitignore(dirname + u'.gitignore')
     else:
         ignored_patterns = []
 
@@ -87,20 +87,20 @@ def generate_hierarchy(dirname='.'):
         else:
             _path = path
 
-        if _path.startswith('.'):
+        if _path.startswith(u'.'):
             pass
         else:
             cur_h = folder_hierarchy
             cur_f = contained_files
-            cur_p = ''
-            for p in _path.split('/'):
+            cur_p = u''
+            for p in _path.split(u'/'):
                 if p:
-                    cur_p += p + '/'
+                    cur_p += p + u'/'
                     if not cur_p in cur_h:
                         cur_h[cur_p] = {}
                     cur_h = cur_h[cur_p]
 
-            cur_f[cur_p] = [f for f in files if not f.startswith('.')]
+            cur_f[cur_p] = [f for f in files if not f.startswith(u'.')]
             for pattern in ignored_patterns:
                 matches = fnmatch.filter(cur_f[cur_p], pattern)
                 for match in matches:
@@ -113,6 +113,6 @@ def interpret_gitignore(gitignore):
     with open(gitignore, 'r') as fh:
         for line in fh:
             _line = line.strip()
-            if _line and not _line.startswith('#'):
+            if _line and not _line.startswith(u'#'):
                 ignore.append(_line)
     return ignore
