@@ -31,8 +31,22 @@ def generate_visualization(dirname, separators=(u'└─>', u'│  ', u'├─>'
 
     for h in sorted(hierarchy.keys()):
         yield (u''.join(base[:-1]) + u' ' + h.strip(u'/'))
-        for part in _generate_visualization(hierarchy[h], files, separators, base):
+
+        file_list = sorted(files[h])
+        file_count = len(file_list) - 1
+
+        for part in _generate_visualization(hierarchy[h], files, separators,
+                                            base, file_count):
             yield part
+
+        for i in range(file_count + 1):
+            f = file_list[i]
+            if u'/' in f:
+                f = f.split(u'/')[-1]
+            if i < file_count:
+                yield (u''.join(base) + separators[2] + u' ' + f)
+            else:
+                yield (u''.join(base) + separators[0] + u' ' + f)
 
 def _generate_visualization(hierarchy, files, separators, base, parent_file_count=0):
     item_list = sorted(hierarchy.items())
@@ -62,10 +76,13 @@ def _generate_visualization(hierarchy, files, separators, base, parent_file_coun
                 yield part
 
         for j in range(file_count + 1):
+            f = file_list[j]
+            if u'/' in f:
+                f = f.split(u'/')[-1]
             if j < file_count:
-                yield (u''.join(_base) + separators[2] + u' ' + file_list[j])
+                yield (u''.join(_base) + separators[2] + u' ' + f)
             else:
-                yield (u''.join(_base) + separators[0] + u' ' + file_list[j])
+                yield (u''.join(_base) + separators[0] + u' ' + f)
 
 def generate_hierarchy(dirname=u'.'):
     if dirname.endswith(u'/'):
@@ -100,7 +117,7 @@ def generate_hierarchy(dirname=u'.'):
                         cur_h[cur_p] = {}
                     cur_h = cur_h[cur_p]
 
-            cur_f[cur_p] = [f for f in files if not f.startswith(u'.')]
+            cur_f[cur_p] = [cur_p + f for f in files if not f.startswith(u'.')]
             for pattern in ignored_patterns:
                 matches = fnmatch.filter(cur_f[cur_p], pattern)
                 for match in matches:
