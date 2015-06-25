@@ -113,6 +113,6 @@ def interpret_gitignore(gitignore):
     with open(gitignore, 'r') as fh:
         for line in fh:
             _line = line.strip()
-            if _line and not _line.startswith(u'#'):
+            if _line and not _line.startswith('#'):
                 ignore.append(_line)
     return ignore

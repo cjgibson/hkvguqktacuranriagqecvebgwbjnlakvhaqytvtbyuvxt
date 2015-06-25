@@ -1,20 +1,21 @@
 ###
-# AUTHORS: CHRISTIAN GIBSON, 
+# AUTHORS: CHRISTIAN GIBSON,
 # PROJECT: REDDIT CHALLENGES
 # UPDATED: FEBURARY 28, 2015
-# USAGE:   
+# USAGE:
 # EXPECTS: python 2.7.6
 ###
 
-task = """
+__task__ = """
 Your mission is to create a stopwatch program. this program should have
 start, stop, and lap options, and it should write out to a file to be viewed
 later.
 """
 
 import Tkinter
-import time
 import os
+import time
+
 
 class stopwatch(Tkinter.Tk):
     def __init__(self, capture_key='s', filename='timer.csv', *args, **kwargs):
@@ -32,7 +33,7 @@ class stopwatch(Tkinter.Tk):
         print "Press <Esc> to quit."
         self.bind('<Key>', self.keypress)
         self.mainloop()
-    
+
     def keypress(self, event):
         if event.char == self.capture:
             if self.started:

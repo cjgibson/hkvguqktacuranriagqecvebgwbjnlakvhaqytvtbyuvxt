@@ -1,12 +1,12 @@
 ###
-# AUTHORS: CHRISTIAN GIBSON, 
+# AUTHORS: CHRISTIAN GIBSON,
 # PROJECT: REDDIT CHALLENGES
 # UPDATED: FEBURARY 28, 2015
-# USAGE:   
+# USAGE:
 # EXPECTS: python 2.7.6
 ###
 
-task = """
+__task__ = """
 create a program that will allow you to enter events organizable by hour.
 There must be menu options of some form, and you must be able to easily edit,
 add, and delete events without directly changing the source code.
@@ -16,21 +16,22 @@ access the different options and receive prompts and instructions telling
 you how to use the program, it will probably be fine)
 """
 
+import codecs
 import collections
 import datetime
 import dateutil.parser
-import codecs
 import json
+
 
 class organizer(collections.defaultdict):
     def __init__(self, storage='schedule.json'):
         self.storage = storage
         self = self.json_load()
-    
+
     def interactive(self):
         print 'Welcome to your Simple Python Organizer.'
         print (("I've found information for %d events "
-                + 'spread across %d dates.') 
+                + 'spread across %d dates.')
                % (sum([len(_s) for _s in self.values()]),
                   len(self)))
         action = raw_input('What would you like to do? (view/add/del/edit/quit) ')
@@ -50,11 +51,11 @@ class organizer(collections.defaultdict):
             else:
                 print "I'm sorry, I didn't understand your input."
             action = raw_input('Anything else? (view/add/del/edit/quit) ')
-        
-    
+
+
     def view_events(self, limit=30):
         _future, _past = self._split_events()
-        
+
         for _time, name in [(_future, 'Future'),
                              (_past, ' Past ')]:
             if len(_time) > 0:
@@ -76,7 +77,7 @@ class organizer(collections.defaultdict):
                         _ = raw_input('Press enter for more event listings.')
             else:
                 print 'Found no %s Events.' % name
-            
+
     def _split_events(self):
         call = datetime.datetime.now()
         _future = []
@@ -91,12 +92,12 @@ class organizer(collections.defaultdict):
         _future = sorted(_future, key=lambda x : x[0], reverse=True)
         _part = sorted(_past, key=lambda x : x[0], reverse=True)
         return _future, _past
-    
+
     def handle_date(self):
         initial = raw_input('Please input the date of the event. ')
         try:
             event_date = dateutil.parser.parse(initial)
-            response = raw_input('Is this date correct? %s (yes/no) ' 
+            response = raw_input('Is this date correct? %s (yes/no) '
                                  % (event_date))
             response = response.lower()
             if 'y' in response:
@@ -125,7 +126,7 @@ class organizer(collections.defaultdict):
                 except:
                     print 'The data entered was not valid.'
         return event_date
-    
+
     def handle_event(self):
         event = {'title' : None,
                  'detail' : None}
@@ -133,7 +134,7 @@ class organizer(collections.defaultdict):
         event['detail'] = raw_input('Is there any other information I should '
                                     + 'record? ')
         return event
-    
+
     def _coerce_numeric(self, data):
         try:
             data = int(data)
@@ -199,29 +200,29 @@ class organizer(collections.defaultdict):
             except AttributeError:
                 raise TypeError
         return data
-    
+
     def add_event(self):
         event_date = self.handle_date()
         event = self.handle_event()
         self._add_event(event_date, event)
         print 'Event added.'
-    
+
     def _add_event(self, event_date, event):
         self.setdefault(event_date, []).append(event)
-    
+
     def del_event(self):
         event_date = self.handle_date()
         event = self.handle_event()
         self._del_event(event_date, event)
         print 'Event deleted.'
-    
+
     def _del_event(self, event_date, event):
         if event_date in self.storage:
             try:
                 self[event_date].remove(event)
             except ValueError:
                 pass
-    
+
     def edit_event(self):
         event_date = self.handle_date()
         old_event = None
@@ -238,21 +239,21 @@ class organizer(collections.defaultdict):
                 old_event = None
         new_event = self.handle_event()
         self._edit_event(event_date, old_event, new_event)
-    
+
     def _edit_event(self, event_date, old_event, new_event):
         self._del_event(event_date, old_event)
         self._add_event(event_date, new_event)
-    
+
     def _query_event_by_title(self, event_date, event_title):
         poss = [t for t in self[event_date] if t['title'] == event_title]
         if poss:
             return poss[0]
         else:
             raise KeyError
-    
+
     def _query_event_by_date(self, event_date):
         return self[event_date]
-    
+
     def json_load(self):
         with codecs.open(self.storage, 'r', 'utf-8') as fh:
             _self = json.load(fh)
@@ -260,18 +261,18 @@ class organizer(collections.defaultdict):
         for k, v in _self.items():
             new_self[datetime.datetime.strptime(k, '%Y-%m-%dT%H:%M:%S')] = v
         return new_self
-    
+
     def json_dump(self):
         with codecs.open(self.storage, 'w', 'utf-8') as fh:
             fh.write(json.dumps(self.serialize()))
-    
+
     def json_dump_readable(self, filename):
         with codecs.open(filename, 'w', 'utf-8') as fh:
             fh.write(json.dumps(self.serialize(),
                                 sort_keys=True,
                                 indent=2,
                                 separators=(',', ': ')))
-    
+
     def serialize(self):
         return dict(zip(
             [k.isoformat() for k in self.keys()],

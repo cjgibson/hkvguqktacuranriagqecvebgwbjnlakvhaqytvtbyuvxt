@@ -1,12 +1,12 @@
 ###
-# AUTHORS: CHRISTIAN GIBSON, 
+# AUTHORS: CHRISTIAN GIBSON,
 # PROJECT: REDDIT CHALLENGES
 # UPDATED: FEBURARY 28, 2015
-# USAGE:   
+# USAGE:
 # EXPECTS: python 2.7.6
 ###
 
-task = """
+__task__ = """
 create a short text adventure that will call the user by their name. The
 text adventure should use standard text adventure commands ("l, n, s, e,
 i, etc.").

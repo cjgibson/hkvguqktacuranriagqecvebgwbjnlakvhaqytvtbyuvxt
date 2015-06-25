@@ -1,12 +1,12 @@
 ###
-# AUTHORS: CHRISTIAN GIBSON, 
+# AUTHORS: CHRISTIAN GIBSON,
 # PROJECT: REDDIT CHALLENGES
 # UPDATED: FEBURARY 25, 2015
-# USAGE:   
+# USAGE:
 # EXPECTS: python 2.7.6
 ###
 
-task = """
+__task__ = """
 we all know the classic "guessing game" with higher or lower prompts.
 lets do a role reversal; you create a program that will guess numbers
 between 1-100, and respond appropriately based on whether users say
@@ -23,7 +23,7 @@ def guess(floor=1, ceiling=100):
     elif floor == ceiling:
         return floor
 
-    current = (floor + ceiling)/2
+    current = (floor + ceiling) / 2
     print 'My first guess is %d.' % current
     while True:
         _next = raw_input('Is that too high, too low, or correct? ')
@@ -35,5 +35,5 @@ def guess(floor=1, ceiling=100):
             return current
         else:
             print "I'm sorry, I didn't understand your input."
-        current = (floor + ceiling)/2
+        current = (floor + ceiling) / 2
         print 'My next guess is %d.' % current

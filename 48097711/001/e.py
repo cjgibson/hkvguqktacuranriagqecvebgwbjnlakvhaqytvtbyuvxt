@@ -1,12 +1,12 @@
 ###
-# AUTHORS: CHRISTIAN GIBSON, 
+# AUTHORS: CHRISTIAN GIBSON,
 # PROJECT: REDDIT CHALLENGES
 # UPDATED: FEBURARY 25, 2015
-# USAGE:   
+# USAGE:
 # EXPECTS: python 2.7.6
 ###
 
-task = """
+__task__ = """
 create a program that will ask the users name, age, and reddit username.
 have it tell them the information back, in the format:
 
@@ -39,7 +39,7 @@ def reddit_info(log=False):
     print ('your name is %s, '
            + 'you are %d years old, '
            + 'and your username is %s.') % (name, age, username)
-    
+
     if log:
         if not os.path.isfile('reddit_user_data.csv'):
             header = True

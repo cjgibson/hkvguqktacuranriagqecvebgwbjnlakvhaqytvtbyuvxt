@@ -285,3 +285,9 @@ build/
 *.vrb
 *.xdy
 *.tdo
+
+########### USER-ADDED LINES BELOW ###########
+### Euler ###
+**/⁂.py
+**/⁂.py_d
+**/keyfile.json
