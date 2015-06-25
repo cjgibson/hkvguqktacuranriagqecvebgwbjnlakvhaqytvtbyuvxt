@@ -16,10 +16,11 @@ for i in ${@:2}; do
   case $i in
     ''|*[/]*) echo "'$i' is not a valid filename." >&2 ; exit 2 ;;
     *[![:print:]]*) echo "'$i' is not a valid filename." >&2 ; exit 2 ;;
-    *) gen_files=${@:2} ;;
+    *) ;;
   esac
 done
 
+gen_files=${@:2}
 format_length=${#1}
 
 echo "This script will create ${1} folders, numbered from `printf "%0${format_length}d" 1` to ${1}."
@@ -27,7 +28,7 @@ echo "This script will create ${1} folders, numbered from `printf "%0${format_le
 if [ $# -ge 2 ]; then
   echo "Additionally, the following empty files will be created in each folder:"
   file_list="  "
-  for i in ${@:2}; do
+  for i in $gen_files; do
     file_list+="  $i"
     if [ ${#file_list} -ge 80 ]; then
       echo $file_list
