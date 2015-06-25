@@ -48,8 +48,8 @@ public class LazyPermutationIterator <T extends Object>
      * Integer constants that represent a left and right pointing values in
      * our permutationDirection array. Although DIRECTION_RIGHT is unused in
      * the body of this class, it is included for documentation purposes.
-     * ACCURACY represents the number of digits included in 
-     * LazyPermutationInterator's BigDecimal _PI and _EN constants.
+     * ACCURACY represents the number of digits past the decimal place 
+     * included in LazyPermutationInterator's BigDecimal _PI and _EN constants.
      */
     private final int DIRECTION_LEFT = -1, DIRECTION_RIGHT = 1, ACCURACY = 587;
     
@@ -77,8 +77,8 @@ public class LazyPermutationIterator <T extends Object>
      *   _02 : Numeric two.
      *   _10 : Numeric ten.
      *   _12 : Numeric twelve.
-     *   _PI : An approximation of PI, accurate to ACCURACY - 1 digits.
-     *   _EN : An approximation of E, accurate to ACCURACY - 1 digits.
+     *   _PI : An approximation of PI, accurate to ACCURACY + 1 digits.
+     *   _EN : An approximation of E, accurate to ACCURACY + 1 digits.
      */
     private final BigDecimal _00 = new BigDecimal("0"),
                              _01 = new BigDecimal("1"),
