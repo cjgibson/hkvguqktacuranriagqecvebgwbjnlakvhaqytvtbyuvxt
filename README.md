@@ -17,6 +17,10 @@ Currently holds:
      83423257
        ├─> 001
        │     └─> ⁂.aes
+       ├─> 002
+       │     └─> ⁂.aes
+       ├─> 003
+       │     └─> ⁂.aes
        ├─> make_readable.py
        └─> make_sharable.py
      93102613

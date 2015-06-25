@@ -7,6 +7,7 @@
 # EXPECTS: python 2.7.6
 ###
 
+import codecs
 import fnmatch
 import os
 
@@ -32,7 +33,10 @@ def generate_visualization(dirname, separators=(u'└─>', u'│  ', u'├─>'
     for h in sorted(hierarchy.keys()):
         yield (u''.join(base[:-1]) + u' ' + h.strip(u'/'))
 
-        file_list = sorted(files[h])
+        if h in files:
+            file_list = sorted(files[h])
+        else:
+            file_list = []
         file_count = len(file_list) - 1
 
         for part in _generate_visualization(hierarchy[h], files, separators,
@@ -58,7 +62,10 @@ def _generate_visualization(hierarchy, files, separators, base, parent_file_coun
         else:
             _path = path.rstrip(u'/')
 
-        file_list = sorted(files[path])
+        if path in files:
+            file_list = sorted(files[path])
+        else:
+            file_list = []
         file_count = len(file_list) - 1
 
         base_addition = []
@@ -84,7 +91,7 @@ def _generate_visualization(hierarchy, files, separators, base, parent_file_coun
             else:
                 yield (u''.join(_base) + separators[0] + u' ' + f)
 
-def generate_hierarchy(dirname=u'.'):
+def generate_hierarchy(dirname=u'.', ignore_empty=True):
     if dirname.endswith(u'/'):
         pass
     else:
@@ -119,17 +126,58 @@ def generate_hierarchy(dirname=u'.'):
 
             cur_f[cur_p] = [cur_p + f for f in files if not f.startswith(u'.')]
             for pattern in ignored_patterns:
-                matches = fnmatch.filter(cur_f[cur_p], pattern)
+                matches = []
+                if u'**' in pattern:
+                    if pattern.startswith(u'**/'):
+                        _pattern = pattern.lstrip(u'*/')
+                        for filename in cur_f[cur_p]:
+                            if filename in pattern:
+                                matches.append(filename)
+                        for match in matches:
+                            cur_f[cur_p].remove(match)
+                    
+                    elif pattern.endswith(u'/**'):
+                        _pattern = pattern.rstrip(u'*')
+                        if _pattern in cur_f:
+                            cur_f.remove(_pattern)
+                    
+                    else:
+                        _pattern = pattern.lstrip(u'/').split(u'**', 1)
+                        if cur_p.startswith(_pattern[0]):
+                            for filename in cur_f[cur_p]:
+                                if _pattern[1] in filename:
+                                    matches.append(filename)
+                else:
+                    matches = fnmatch.filter(cur_f[cur_p], pattern.lstrip(u'/'))
                 for match in matches:
                     cur_f[cur_p].remove(match)
+                
+                if ignore_empty and len(cur_f[cur_p]) < 1:
+                    cur_p = ''
+                    cur_h = folder_hierarchy
+                    for p in _path.split(u'/')[:-1]:
+                        if p:
+                            cur_p += p + u'/'
+                            cur_h = cur_h[cur_p]
+                    cur_p += _path.split(u'/')[-1] + u'/'
+                    
+                    if len(cur_h[cur_p]) < 1:
+                        del cur_f[cur_p]
+                    
+                    del cur_h[cur_p]
+                    
+                    break
 
     return folder_hierarchy, contained_files, ignored_patterns
 
 def interpret_gitignore(gitignore):
     ignore = []
-    with open(gitignore, 'r') as fh:
+    with codecs.open(gitignore, 'r', 'utf-8') as fh:
         for line in fh:
             _line = line.strip()
-            if _line and not _line.startswith('#'):
+            if _line and not _line.startswith(u'#'):
                 ignore.append(_line)
     return ignore
+
+if __name__ == '__main__':
+    print_visualization('../..')
