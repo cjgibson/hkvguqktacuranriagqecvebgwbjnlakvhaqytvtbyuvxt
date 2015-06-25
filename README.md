@@ -6,28 +6,29 @@
 Nothing special, really. Just a collection of folders used for general storage.
 Currently holds:
 
-    48097711
-      ├─> 001
-      │     ├─> e.py
-      │     ├─> h.py
-      │     ├─> i.py
-      │     └─> schedule.json
-      └─> ...
-    83423257
-      ├─> 001
-      │     └─> ⁂.aes
-      ├─> make_readable.py
-      └─> make_sharable.py
-    93102613
-      ├─> GitHierarchyGenerator
-      │     └─> git_hierarchy.py
-      ├─> LazyPermutationIterator
-      │     ├─> LazyPermutationIterator.java
-      │     └─> main.java
-      └─> MonitorSizeCalculator
-            ├─> monitor.pdf
-            ├─> monitor.py
-            └─> monitor.tex
+     48097711
+       ├─> 001
+       │     ├─> e.py
+       │     ├─> h.py
+       │     ├─> i.py
+       │     └─> schedule.json
+       ├─> ...
+       └─> helpers.py
+     83423257
+       ├─> 001
+       │     └─> ⁂.aes
+       ├─> make_readable.py
+       └─> make_sharable.py
+     93102613
+       ├─> GitHierarchyGenerator
+       │     └─> git_hierarchy.py
+       ├─> LazyPermutationIterator
+       │     ├─> LazyPermutationIterator.java
+       │     └─> main.java
+       └─> MonitorSizeCalculator
+             ├─> monitor.pdf
+             ├─> monitor.py
+             └─> monitor.tex
 
 ## 48097711
 
@@ -43,7 +44,7 @@ A collection of programming challenges from from [Project Euler](https://project
      }
 
 `make_readable.py` will automatically interpret this JSON string and coerce each matching key to the correct length before using it to decrypt the associated source code file.
-After decryption, the human-readable source code will be available in the same folder as its encrypted source, and will be named `⁂.py_d`.
+After decryption, the human-readable source code will be available in the same folder as its encrypted source, and will be named `⁂.py_d`. Of course, it's possible that someone could reverse engineer the correct solutions to the problems hosted on [Project Euler](https://projecteuler.net/) by brute forcing the contained `⁂.aes` files, but I'm going to assume that anyone driven enough to derive the correct solution in that fashion is more likely than not sufficiently skilled to solve the problem themselves anyway.
 
 ## 93102613
 

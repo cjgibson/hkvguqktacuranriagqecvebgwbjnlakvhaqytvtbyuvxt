@@ -62,7 +62,7 @@ def _generate_visualization(hierarchy, files, separators, base, parent_file_coun
         file_count = len(file_list) - 1
 
         base_addition = []
-        if i < item_count or parent_file_count > 0:
+        if i < item_count or parent_file_count > -1:
             yield (u''.join(base) + separators[2] + u' ' + _path)
             base_addition = [separators[1], separators[3]]
         else:
