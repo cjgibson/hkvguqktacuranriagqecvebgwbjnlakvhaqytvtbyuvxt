@@ -111,10 +111,10 @@ class calculator():
     def _fac(self, a):
         if a < 0:
             return None
-        while len(self.factorial_helper) < a + 1:
-            self.factorial_helper.append(
-                (len(self.factorial_helper))
-                * self.factorial_helper[len(self.factorial_helper) - 1])
+        l = len(self.factorial_helper)
+        while l < a + 1:
+            self.factorial_helper.append(l * self.factorial_helper[-1])
+            l += 1
         return self.factorial_helper[a]
 
     def _root(self, a, r):

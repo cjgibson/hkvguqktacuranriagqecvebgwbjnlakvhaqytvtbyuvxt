@@ -11,18 +11,13 @@ def group(s):
         print g
 
 def _group(s, l=70):
-    import re
-    r = ''
-    n = [_s for _s in re.split('[ \t]', s)]
-    while n:
-        r += n.pop(0)
-        if '\n' in r or '\r' in r:
-            r = re.split('[\n\r]', r)
-            yield r[0]
-            r = r[1] + ' '
-        elif len(r) > l:
-            yield r
-            r = ''
-        else:
-            r += ' '
-    yield r
+    texts = s.split('\n')
+    for t in texts:
+        current = ''
+        for _t in t.split(' '):
+            current += _t + ' '
+            if len(current) > l:
+                yield current
+                current = '  '
+        if current:
+            yield current
