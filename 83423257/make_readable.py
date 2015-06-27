@@ -42,7 +42,9 @@ def handle(key, key_length=32):
         key_bytes.extend(key.encode('utf-8'))
 
     if len(key_bytes) <= key_length:
-        key_bytes.extend(b'\0' * (key_length - len(key_bytes)))
+        while len(key_bytes) < key_length:
+            key_bytes.append(key_bytes[((key_length - len(key_bytes))
+                                        % len(key_bytes) - 1)])
     else:
         key_bytes = key_bytes[:key_length]
 
