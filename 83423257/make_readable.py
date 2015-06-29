@@ -8,8 +8,10 @@
 ###
 
 from Crypto.Cipher import AES
+import hashlib
 import json
 import os
+
 
 _DEFAULT_DECRYPTED_NAME = u'⁂.py_d'
 _DEFAULT_ENCRYPTED_NAME = u'⁂.aes'
@@ -33,13 +35,13 @@ def decrypt(encrypted_text, key):
     decrypted_text = cipher.decrypt(encrypted_text[AES.block_size:])
     return decrypted_text.rstrip(b'\0')
 
-def handle(key, key_length=32):
+def handle(key, key_length=32, method=lambda k : hashlib.sha256(k).digest()):
     key_bytes = bytearray()
 
     try:
-        key_bytes.extend(key)
+        key_bytes.extend(method(key))
     except:
-        key_bytes.extend(key.encode('utf-8'))
+        key_bytes.extend(method(key.encode('utf-8')))
 
     if len(key_bytes) <= key_length:
         while len(key_bytes) < key_length:

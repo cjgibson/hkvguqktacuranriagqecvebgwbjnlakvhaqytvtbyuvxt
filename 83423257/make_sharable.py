@@ -9,6 +9,7 @@
 
 from Crypto import Random
 from Crypto.Cipher import AES
+import hashlib
 import json
 import os
 
@@ -35,13 +36,13 @@ def encrypt(decrypted_text, key):
     cipher = AES.new(key, AES.MODE_CBC, AES_IV)
     return AES_IV + cipher.encrypt(text)
 
-def handle(key, key_length=32):
+def handle(key, key_length=32, method=lambda k : hashlib.sha256(k).digest()):
     key_bytes = bytearray()
 
     try:
-        key_bytes.extend(key)
+        key_bytes.extend(method(key))
     except:
-        key_bytes.extend(key.encode('utf-8'))
+        key_bytes.extend(method(key.encode('utf-8')))
 
     if len(key_bytes) <= key_length:
         while len(key_bytes) < key_length:
