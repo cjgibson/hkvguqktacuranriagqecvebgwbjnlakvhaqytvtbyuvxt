@@ -22,7 +22,9 @@ Currently holds:
        ├─> 001
        │     └─> ⁂.aes
        ├─> ...
-       ├─> 009
+       ├─> 020
+       │     └─> ⁂.aes
+       ├─> 051
        │     └─> ⁂.aes
        ├─> make_readable.py
        └─> make_sharable.py
@@ -32,10 +34,12 @@ Currently holds:
        ├─> LazyPermutationIterator
        │     ├─> LazyPermutationIterator.java
        │     └─> main.java
-       └─> MonitorSizeCalculator
-             ├─> monitor.pdf
-             ├─> monitor.py
-             └─> monitor.tex
+       ├─> MonitorSizeCalculator
+       │     ├─> monitor.pdf
+       │     ├─> monitor.py
+       │     └─> monitor.tex
+       └─> UnicodeSentenceSplitter
+             └─> sentence_split.py
 
 ## 48097711
 
@@ -66,5 +70,8 @@ A collection of personal pet projects, created for one reason or another.
 3. MonitorSizeCalculator
    * A Python implementation of a simple calculation that determines optimal monitor dimensions for so-called "matching" monitors, and the Pixels-Per-Inch disparity between two monitors, when provided with their respective dimensions.
    * Code is wholly undocumented, but contains an associated PDF detailing the methods used and the rationale behind each.
+4. UnicodeSentenceSplitter
+   * A simple attempt to create a (more or less) language invariant sentence splitter using regular expressions, as suggested by the Unicode Consortium at http://www.unicode.org/reports/tr29/#Sentence_Boundaries.
+   * Does not strictly follow the standards set forth by the Unicode Consortium, but (probably) serves to approximate what they're describing.
    
 [![forthebadge](http://forthebadge.com/images/badges/made-with-crayons.svg)](http://forthebadge.com)
