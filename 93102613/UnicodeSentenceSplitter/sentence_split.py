@@ -83,51 +83,50 @@ import regex
 # )
 ###
 
-_PATTERN = ur"""
-(?x)
+_CHECK = (u"["
+          ur"\p{Pd}\p{Ps}\p{Pe}\p{Pi}\p{Pf}\p{Pc}\p{S}"
+          ur"/\#&,*+@$%^'" + u'"' + ur"\-:;\(\)\[\]\{\}"
+          ur"\u2022\u055d\u060c\u060d\u07f8\u1802\u1808\u2013"
+          ur"\u2014\u3001\ufe10\ufe11\u30fb\ufe13\ufe31\ufe32"
+          ur"\ufe50\ufe51\ufe55\ufe58\ufe63\uff0c\uff0d\uff1a"
+          ur"\uff64\u2026"
+          u"]")
+_PATTERN = ur"""(?x)
 (
-  (?:[^\p{Po}\r\n]*)
+  (?:[^\p{{Po}}\r\n]*)
   (?:
-    (?=\p{Po})
-    (?=
-      [\p{Pd}\p{Ps}\p{Pe}\p{Pi}\p{Pf}\p{Pc}\p{S}/\#&,*+@$%^'"\-:;\(\)\[\]\{\}\u2022\u055d\u060c\u060d\u07f8\u1802\u1808\u2013\u2014\u3001\ufe10\ufe11\u30fb\ufe13\ufe31\ufe32\ufe50\ufe51\ufe55\ufe58\ufe63\uff0c\uff0d\uff1a\uff64\u2026]
-    )
-    (?:
-      .[\p{Pd}\p{Ps}\p{Pe}\p{Pi}\p{Pf}\p{Pc}\p{S}/\#&,*+@$%^'"\-:;\(\)\[\]\{\}\u2022\u055d\u060c\u060d\u07f8\u1802\u1808\u2013\u2014\u3001\ufe10\ufe11\u30fb\ufe13\ufe31\ufe32\ufe50\ufe51\ufe55\ufe58\ufe63\uff0c\uff0d\uff1a\uff64\u2026]*
-    )
+    (?=\p{{Po}})
+    (?={0})
+    (?:.{0}*)
     (?R)|
-    (?!
-      [\p{Pd}\p{Ps}\p{Pe}\p{Pi}\p{Pf}\p{Pc}\p{S}/\#&,*+@$%^'"\-:;\(\)\[\]\{\}\u2022\u055d\u060c\u060d\u07f8\u1802\u1808\u2013\u2014\u3001\ufe10\ufe11\u30fb\ufe13\ufe31\ufe32\ufe50\ufe51\ufe55\ufe58\ufe63\uff0c\uff0d\uff1a\uff64\u2026]
-    )
+    (?!{0})
     (?=.[A-z0-9])
-    (?:.{1,4}[\p{P}\p{Zs}]*)
+    (?:.{{1,4}}[\p{{P}}\p{{Zs}}]*)
     (?R)|
-    (?=\.{3})
-    (?:\.{3})
+    (?=\.{{3}})
+    (?:\.{{3}})
     (?R)|
-    (?<=\p{Lu}\p{Ll})
+    (?<=\p{{Lu}}\p{{Ll}})
     (?:.)
     (?R)|
-    (?<=\p{Lu}\p{Ll}{2})
+    (?<=\p{{Lu}}\p{{Ll}}{{2}})
     (?:.)
     (?R)|
-    (?<=\p{Zs}\p{N})
+    (?<=\p{{Zs}}\p{{N}})
     (?:.)
     (?R)|
-    (?<=^\p{N})
+    (?<=^\p{{N}})
     (?:.)
     (?R)|
-    (?:.[\p{P}\p{Zs}]*)
+    (?:.[\p{{P}}\p{{Zs}}]*)
   )|
-  (?!\p{Po})
+  (?!\p{{Po}})
   (?=[\r\n])
   (?:[\r\n])|
   (?![\r\n])
-  (?:
-    [\p{Pd}\p{Ps}\p{Pe}\p{Pi}\p{Pf}\p{Pc}\p{S}/\#&,*+@$%^'"\-:;\(\)\[\]\{\}\u2022\u055d\u060c\u060d\u07f8\u1802\u1808\u2013\u2014\u3001\ufe10\ufe11\u30fb\ufe13\ufe31\ufe32\ufe50\ufe51\ufe55\ufe58\ufe63\uff0c\uff0d\uff1a\uff64\u2026]+
-  )
+  (?:{0}+)
   (?R)
-)"""
+)""".format(_CHECK)
 _REGEX = regex.compile(_PATTERN, regex.UNICODE + regex.V1)
 
 
